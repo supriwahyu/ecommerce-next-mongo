@@ -1,14 +1,23 @@
 import Layout from '/components/Layout'
+import React, { useEffect, useState } from "react";
 import axios from "axios"
+import { useRouter } from 'next/router';
 
 export default function NewProduct() {
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState('');
+	const [goToProducts, setGoToProducts] = useState(false);
+	const router = useRouter();
 
-	async function createProduct() {
+	async function createProduct(ev) {
+		ev.preventDefault();
 		const data = { title, description, price };
-		await axios.post('api/products', data);
+		await axios.post('/api/products', data);
+		setGoToProducts(true);
+	}
+	if (goToProducts) {
+		router.push('/products');
 	}
 	return (
 		<Layout>
@@ -26,7 +35,7 @@ export default function NewProduct() {
 				<input type="number" placeholder="Price"
 					value={price}
 					onChange={ev => setPrice(ev.target.value)} />
-				<button type="submit" classNmae="btn-primary">Save</button>
+				<button type="submit" className="btn-primary">Save</button>
 			</form>
 		</Layout>
 	);
