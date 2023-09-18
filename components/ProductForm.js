@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios"
 import { useRouter } from 'next/router';
 
@@ -13,7 +13,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
         ev.preventDefault();
         const data = { title, description, price };
         if (_id) {
-            await axios.put('/api/products', { ...data._id });
+            await axios.put('/api/products', { ...data, _id });
         } else {
             await axios.post('/api/products', data);
         }
