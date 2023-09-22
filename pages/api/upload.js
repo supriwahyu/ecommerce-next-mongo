@@ -13,12 +13,15 @@ const asyncParse = (req) =>
         const form = new IncomingForm({ multiples: true });
         form.parse(req, (err, fields, files) => {
             if (err) return reject(err);
-            resolve({ fields, files });
 
             let uploads = [];
+            let links = [];
             for (let k in files.file) {
+                const ext = files.file[k].originalFilename.split('.').pop();
+                const newFilename = Date.now() + '.' + ext;
+                const link = `${process.env.BASE}/uploads/${newFilename}`;
                 // console.log(files.file[k].filepath);
-                mv(files.file[k].filepath, `./public/uploads/${files.file[k].originalFilename}`, function (err) {
+                mv(files.file[k].filepath, `./public/uploads/${newFilename}`, function (err) {
                     let promise = new Promise(function (resolve, reject) {
                         if (err) {
                             reject(err);
@@ -26,8 +29,11 @@ const asyncParse = (req) =>
                             resolve();
                         }
                     });
+                    links.push(link);
                     uploads.push(promise);
-                    console.log(promise);
+                    // console.log(promise);
+                    // console.log(link);
+                    resolve({ fields, files, uploads, links });
                 })
             } // end for loop
 
