@@ -63,14 +63,20 @@ function Categories({ swal }) {
         <Layout>
             <h1>Categories</h1>
             <label>{editedCategory ? `Edit Category ${editedCategory.name}` : 'New Category Name'}</label>
-            <form onSubmit={saveCategory} className="flex gap-1">
-                <input value={name} onChange={ev => setName(ev.target.value)} className="mb-0" type="text" placeholder="Category Name" />
-                <select className="mb-0" onChange={ev => setParentCategory(ev.target.value)} value={parentCategory}>
-                    <option value="">No Parent Category</option>
-                    {categories.length > 0 && categories.map(category => (
-                        <option value={category._id}>{category.name}</option>
-                    ))}
-                </select>
+            <form onSubmit={saveCategory}>
+                <div className="flex gap-1">
+                    <input value={name} onChange={ev => setName(ev.target.value)} type="text" placeholder="Category Name" />
+                    <select onChange={ev => setParentCategory(ev.target.value)} value={parentCategory}>
+                        <option value="">No Parent Category</option>
+                        {categories.length > 0 && categories.map(category => (
+                            <option value={category._id}>{category.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="mb-2">
+                    <label className="block">Properties</label>
+                    <button type="button" onClick={ } className="btn-default">Add New Properties</button>
+                </div>
                 <button type="submit" className="btn btn-primary py-1">Save</button>
             </form>
             <table className="basic mt-4">
