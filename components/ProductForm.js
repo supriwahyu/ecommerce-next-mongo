@@ -4,11 +4,12 @@ import { useRouter } from 'next/router';
 import Spinner from "./spinner";
 import { ReactSortable } from "react-sortablejs";
 
-export default function ProductForm({ _id, title: existingTitle, description: existingDescription, price: existingPrice, images: existingImages, category: assignedCategory }) {
+export default function ProductForm({ _id, title: existingTitle, description: existingDescription, price: existingPrice, images: existingImages, category: assignedCategory, properties: assignedProperties }) {
     const [title, setTitle] = useState(existingTitle || '');
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
     const [category, setCategory] = useState(assignedCategory || '');
+    const [productProperties, setProductProperties] = useState(assignedProperties || {});
     const [images, setImages] = useState(existingImages || []);
     const [goToProducts, setGoToProducts] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -22,7 +23,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
 
     async function saveProduct(ev) {
         ev.preventDefault();
-        const data = { title, description, price, images, category };
+        const data = { title, description, price, images, category, properties: productProperties };
         if (_id) {
             await axios.put('/api/products', { ...data, _id });
         } else {
@@ -64,6 +65,13 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
             catInfo = parentCat;
         }
     }
+    function setProductProp(propName, value) {
+        setProductProperties(prev => {
+            const newProductprops = { ...prev };
+            newProductprops[propName] = value;
+            return newProductprops;
+        })
+    }
 
     return (
         <form onSubmit={saveProduct}>
@@ -79,8 +87,13 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
                 ))}
             </select>
             {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-                <div className="">
+                <div className="flex gap-1">
                     {p.name}
+                    <select value={productProperties[p.name]} onChange={ev => setProductProp(p.name, ev.target.value)}>
+                        {p.values.map(v => (
+                            <option value={v}>{v}</option>
+                        ))}
+                    </select>
                 </div>
             ))}
             <label>Photos</label>
