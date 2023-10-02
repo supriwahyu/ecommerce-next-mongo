@@ -1,4 +1,6 @@
+import { mongooseConnect } from "@/lib/mongoose";
 import { IncomingForm } from "formidable";
+import { isAdminRequest } from "./auth/[...nextauth]";
 const fs = require('fs');
 var mv = require('mv');
 
@@ -42,7 +44,9 @@ const asyncParse = (req) =>
 
 
 export default async function handler(req, res) {
-    console.log("Receiving");
+    // console.log("Receiving");
+    await mongooseConnect();
+    await isAdminRequest(req, res);
     if (req.method === "POST") {
         const result = await asyncParse(req);
         res.status(200).json({ result });
