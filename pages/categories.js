@@ -5,8 +5,8 @@ import { withSwal } from "react-sweetalert2";
 
 function Categories({ swal }) {
     const [name, setName] = useState('');
-    const [categories, setCategories] = useState([]);
-    const [parentCategory, setParentCategory] = useState([]);
+    const [categories, setCategories] = useState('');
+    const [parentCategory, setParentCategory] = useState('');
     const [editedCategory, setEditedCategory] = useState(null);
     const [properties, setProperties] = useState([]);
     useEffect(() => {
